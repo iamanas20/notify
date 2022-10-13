@@ -1,0 +1,61 @@
+html,
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+ul,
+li,
+* {
+  padding: 0;
+  margin: 0;
+  font-family: 'InterTight', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+body, html {
+  scroll-behavior: smooth;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'InterTight';
+  src: url('../assets/inter-tight-font/InterTight-Regular.ttf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'InterTight';
+  src: url('../assets/inter-tight-font/InterTight-SemiBold.ttf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'InterTight';
+  src: url('../assets/inter-tight-font/InterTight-Bold.ttf');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'InterTight';
+  src: url('../assets/inter-tight-font/InterTight-Black.ttf');
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'InterTight';
+  src: url('../assets/inter-tight-font/InterTight-Light.ttf');
+  font-weight: 300;
+}

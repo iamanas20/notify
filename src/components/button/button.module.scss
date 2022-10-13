@@ -1,0 +1,54 @@
+@import '../../styles/variables.scss';
+
+.button {
+  padding: 0 20px;
+  height: 42px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  border-radius: 6px;
+  &.primary {
+    color: $secondary;
+    background: $primary;
+
+    &:hover {
+      background: $primaryHover;
+    }
+
+    &:active {
+      background: $primary;
+    }
+  }
+
+  &.secondary {
+    color: $primary;
+    background: $secondary;
+    box-shadow: inset 0 0 0 2px $primary;
+
+    &:hover {
+      color: $primaryHover;
+      box-shadow: inset 0 0 0 2px $primaryHover;
+    }
+
+    &:active {
+      color: $primary;
+      background: $secondaryHover;
+      box-shadow: inset 0 0 0 2px $primary;
+    }
+  }
+
+  &.danger {
+    color: $secondary;
+    background: $danger;
+
+    &:hover {
+      background: $dangerHover
+    }
+
+    &:active {
+      background: $danger;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+.homePage {
+  max-width: 1200px;
+  width: 100%;
+  margin: auto;
+  padding: 68px 34px;
+}
+
+.pageTitleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 64px;
+  .pageTitle {
+    font-size: 48px;
+    font-weight: 400;
+  }
+}
