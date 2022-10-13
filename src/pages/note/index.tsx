@@ -1,12 +1,40 @@
 import { ChangeEventHandler, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '../../components';
+import { useData } from '../../data';
 import styles from './note.module.scss';
 
 export function Note() {
+  const navigate = useNavigate();
+  const { state, update } = useData();
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
 
+  function save() {
+    update({
+      notes: [
+        ...state.notes,
+        {
+          id: Math.random(), // this will come from the API
+          title,
+          text,
+          color: 'white', // will add a color picker
+        }
+      ]
+    });
+    navigate('/');
+  }
+
   return (
     <div className={styles.notePage}>
+      <div className={styles.actionBar}>
+        <Button type="secondary" link to="/">
+          Cancel
+        </Button>
+        <Button type="primary" onClick={save}>
+          Save
+        </Button>
+      </div>
       <TitleInput
         value={title}
         onChange={(e) => setTitle(e.target.value)}

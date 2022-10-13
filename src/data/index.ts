@@ -11,11 +11,11 @@ import { state, StateType } from "./state";
 export const AppContext = createContext<StateType>(state);
 export const AppUpdateContext = createContext<Dispatch<SetStateAction<StateType>>>(() => {});
 
-export function useData(): { state: StateType, update: (data: StateType) => void } {
+export function useData(): { state: StateType, update: (data: Partial<StateType>) => void } {
   const state = useContext(AppContext);
   const setAppState = useContext(AppUpdateContext);
   
-  function update(data: StateType) {
+  function update(data: Partial<StateType>) {
     // use immutable when we start the update
     setAppState({
       ...state,
