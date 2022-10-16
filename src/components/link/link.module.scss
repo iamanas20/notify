@@ -1,0 +1,12 @@
+@import '../../styles/variables.scss';
+
+.back {
+  font-size: 18px;
+  color: $primary;
+  &:hover {
+    color: $primaryHover;
+  }
+  &:active {
+    color: $primary;
+  }
+}

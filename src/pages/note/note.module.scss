@@ -9,40 +9,59 @@
   display: flex;
   flex-direction: column;
 
-  .actionBar {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 14px;
-    align-items: center;
-    justify-content: flex-end;
-    margin-top: -40px;
-    margin-bottom: 20px;
-  }
-  .titleInput {
-    width: 100%;
-    height: 86px;
-    font-size: 46px;
-    padding: 0 20px;
-    border: none;
-    outline: none;
-    color: $primary;
-    margin-bottom: 38px;
-    &::placeholder {
-      font-weight: 400;
-      color: $secondaryText;
+  .pickerContainer {
+    position: absolute;
+    .picker {
+      position: relative;
+      z-index: 3;
+      top: 150px;
+    }
+    .cover {
+      z-index: 1;
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
     }
   }
-  .textInput {
-    font-size: 18px;
-    width: 100%;
-    padding: 0 20px;
-    border: none;
-    outline: none;
-    color: $primary;
-    flex: 1;
-    &::placeholder {
-      font-weight: 400;
-      color: $secondaryText;
+  .actionBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: -40px;
+    margin-bottom: 20px;
+    .colorLabel {
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 12px;
+      align-items: center;
+      cursor: pointer;
+      .label {
+        font-size: 14px;
+        color: $primary;
+      }
+      .noteColor {
+        height: 28px;
+        width: 28px;
+        border-radius: 3px;
+        border: 1px solid $secondaryText;
+      }
+      &:hover{
+        .label {
+          color: $primaryHover;
+        }
+        .noteColor {
+          box-shadow: 0 0 2px 1px $hoverShadow;
+        }
+      }
+    }
+    .buttonContainer {
+      display: grid;
+      grid-template-columns: auto auto auto auto;
+      gap: 14px;
+      align-items: center;
+      justify-content: flex-end;
     }
   }
 }
