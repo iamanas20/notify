@@ -1,28 +1,35 @@
-import React, { Fragment, useState } from 'react';
-import { AppContext, AppUpdateContext } from './data/context';
-import { state, StateType } from './data/state';
-
+import { Fragment, useState } from 'react';
+import { state, AppContext, AppUpdateContext } from './data';
 import {
   BrowserRouter,
   Routes,
   Route,
 } from 'react-router-dom';
-
 import {
   Auth,
   Home,
   Note
 } from './pages';
+import { Navbar } from './components';
+import { AuthMiddleware } from './data/authMiddleware';
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 import './styles/index.scss';
-import { AuthMiddleware } from './data/authMiddleware';
-import { Navbar } from './components';
+import { StateType } from './data/types';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false
+    }
+  }
+});
 
 export default function App() {
   const [appState, setAppState] = useState<StateType>(state);
   console.log(process.env.REACT_APP_API_URL);
   return (
-    <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
       <AppContext.Provider value={appState}>
         <AppUpdateContext.Provider value={setAppState}>
           <BrowserRouter>
@@ -33,7 +40,7 @@ export default function App() {
           </BrowserRouter>
         </AppUpdateContext.Provider>
       </AppContext.Provider>
-    </React.StrictMode>
+    </QueryClientProvider>
   )
 }
 

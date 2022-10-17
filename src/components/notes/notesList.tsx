@@ -1,35 +1,29 @@
-import axios from "axios";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
-import { useData } from "../../data/context";
+import { useData, NoteType, useApi } from "../../data";
 import styles from './notes.module.scss';
+import { useQuery } from 'react-query';
+import { PageLoader } from "../page-loader";
 
 export function NotesList() {
-  const { state, update } = useData();
-  useEffect(
-    () => {
-      axios.get(
-        process.env.REACT_APP_API_URL + 'notes',
-        {
-          headers: { Authorization: `Bearer ${state.token}` }
-        }
-      )
-      .then(
-        response => {
-          update({
-            notes: response.data
-          })
-        }
-      )
-    }, []
-  );
+  const { state } = useData();
+  const api = useApi();
+  const { data, isFetching } = useQuery<NoteType[], Error>('notesListQuery', async () => {
+    const { data } = await api
+    .get(
+      'notes',
+    );
+    return data.sort((a: NoteType, b: NoteType) => a.created_at > b.created_at);
+  });
 
   return (
     <Fragment>
       <p className={styles.listTitle}>Notes list</p>
-      <div className={styles.notesList}>
+      {
+        isFetching ? <PageLoader /> :
+        <div className={styles.notesList}>
         {
-          state.notes.map(
+          data!.map(
             (note) => {
               return (
                 <Link
@@ -52,7 +46,8 @@ export function NotesList() {
             }
           )
         }
-      </div>
+        </div>
+      }
     </Fragment>
   )
 }

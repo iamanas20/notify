@@ -1,75 +1,68 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { useData } from "./context";
 import { PageLoader } from "../components";
+import { useQuery, useQueryClient } from "react-query";
+import { useApi } from "./useApi";
 
 type AuthMiddlewareProps = {
-  children: any;
+  children: JSX.Element;
 }
 
 export function AuthMiddleware(props: AuthMiddlewareProps) {
   const navigate = useNavigate();
-  const { state, update } = useData();
+  const { update } = useData();
   const [cookies] = useCookies(['token']);
-  const [loading, setLoading] = useState(true);
+  const api = useApi();
+
+  const { isFetching } = useQuery(
+    'userQuery',
+    async () => {
+      const { data } = await api.get('auth/me');
+      return data;
+    },
+    {
+      onSuccess: () => {
+        update({
+          token: cookies["token"],
+        });
+      },
+      enabled: cookies["token"] !== undefined,
+    }
+  );
 
   useEffect(
     () => {
-      if(!state.user){
-        if(cookies["token"]){
-          // make API call to get user
-          axios.get(process.env.REACT_APP_API_URL + 'auth/me', {
-            headers: { Authorization: `Bearer ${cookies["token"]}` }
-          })
-          .then(
-            response => {
-              update({
-                token: cookies["token"],
-                user: response.data
-              });
-            }
-          )
-          .finally(
-            () => {
-              setLoading(false);
-            }
-          );
-        } else {
-          navigate('/auth');
-        }
-      } else {
-        setLoading(false);
+      if(!cookies["token"]) {
+        navigate('/auth');
       }
     }, []
-  )
-  return loading ? <PageLoader /> : props.children;
+  );
+
+  return isFetching ? <PageLoader /> : props.children;
 }
 
 export function useUser() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { state, update } = useData();
+  const { update } = useData();
   const [cookies, setCookie, removeCookie] = useCookies(['token']);
 
   function logout() {
     removeCookie("token");
     update({
       token: '',
-      user: null,
     });
     navigate('/auth');
   }
 
   function setUserToken(userToken: string) {
-    update({
-      token: userToken
-    });
     setCookie("token", userToken, { path: '/' });
   }
 
   return {
-    user: state.user,
+    user: queryClient.getQueryData('userQuery'),
     logout,
     setUserToken,
   }

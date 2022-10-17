@@ -1,14 +1,13 @@
-import axios from 'axios';
-import { MouseEvent, useState } from 'react';
+import { useState } from 'react';
+import { useMutation } from 'react-query';
 import { useNavigate } from "react-router-dom";
-import { Button, TextInput, Link } from '../../components';
-import { FormField } from '../../components/inputs/formField';
-import { useUser } from '../../data/authMiddleware';
+import { Button, TextInput, Link, FormField } from '../../components';
+import { useUser, useApi } from "../../data";
 import styles from './auth.module.scss';
 
 export function Signup() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const api = useApi(false);
   const { setUserToken } = useUser();
   const [form, setForm] = useState({
     name: '',
@@ -17,26 +16,23 @@ export function Signup() {
     rePassword: '',
   });
 
+  const signupMutation = useMutation(async (signupData) => {
+    return (await api.post('auth/signup', signupData)).data;
+  }, {
+    onSuccess: (data) => {
+      setUserToken(data.authToken);
+      navigate('/');
+    },
+  });
+
   function signup() {
     if(form.name && form.email) {
       if(form.password === form.rePassword) {
-        setLoading(true);
-        axios.post(process.env.REACT_APP_API_URL + 'auth/signup', {
+        signupMutation.mutate({
           name: form.name,
           email: form.email,
           password: form.password
-        })
-        .then(
-          response => {
-            setUserToken(response.data.authToken);
-            navigate('/');
-          }
-        )
-        .finally(
-          () => {
-            setLoading(false);
-          }
-        )
+        } as any);
       }
     }
   }
@@ -57,12 +53,12 @@ export function Signup() {
           <TextInput value={form.password} onChange={(e) => setForm({...form, password: e.target.value})}/>
         </FormField>
         <FormField label='Password again'>
-          <TextInput value={form.rePassword} onChange={(e) => setForm({...form, rePassword: e.target.value})}/>
+          <TextInput value={form.rePassword} type="password" onChange={(e) => setForm({...form, rePassword: e.target.value})}/>
         </FormField>
         
         <Button
           className={styles.button}
-          loading={loading}
+          loading={signupMutation.isLoading}
           type="primary"
           children="Create your account"
           onClick={signup}

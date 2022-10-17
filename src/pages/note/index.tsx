@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { Button, Link, NoteInput, PageLoader, TitleInput } from '../../components';
-import { useData } from '../../data/context';
 import { ChromePicker } from 'react-color';
 import styles from './note.module.scss';
-import { NoteType } from '../../data/state';
-import axios from 'axios';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { NoteType, useApi } from "../../data";
 
 export function Note() {
   return (
@@ -22,76 +21,54 @@ type NewNoteProps = {
 };
 
 function NewNote(props: NewNoteProps) {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { state, update } = useData();
-  const [loading, setLoading] = useState(false);
+  const api = useApi();
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  
   const [noteData, setNoteData] = useState(props.note || {
     title: '',
     text: '',
     color: '#F3F7FE',
   });
+  
+  function invalidateNotesList() {
+    queryClient.invalidateQueries('notesListQuery');
+    navigate('/');
+  }
 
   function togglePicker() {
     setIsPickerOpen(!isPickerOpen);
   }
 
+  const editMutation = useMutation(async (noteData) => {
+    return await api.post(
+      `notes/${props.note!.id}`,
+      noteData,
+    )
+  }, {
+    onSuccess: invalidateNotesList
+  });
+  const addMutation = useMutation(async (noteData) => {
+    return await api.post(
+      'notes',
+      noteData,
+    )
+  }, {
+    onSuccess: invalidateNotesList
+  });
+
   function save() {
     if(props.note) {
       // update
-      setLoading(true);
-      axios.post(
-        process.env.REACT_APP_API_URL + `notes/${props.note.id}`,
-        {
-          title: noteData.title,
-          text: noteData.text,
-          color: noteData.color,
-        },
-        {
-          headers: { Authorization: `Bearer ${state.token}` }
-        }
-      )
-      .then(
-        response => {
-          const note = response.data;
-          update({
-            notes: state.notes.map(n => n.id === note.id ? note : n)
-          });
-          navigate('/');
-        }
-      )
-      .finally(
-        () => {
-          setLoading(false);
-        }
-      )
+      editMutation.mutate({
+        title: noteData.title,
+        text: noteData.text,
+        color: noteData.color,
+      } as any);
     } else {
       // create
-      setLoading(true);
-      axios.post(
-        process.env.REACT_APP_API_URL + 'notes',
-        noteData,
-        {
-          headers: { Authorization: `Bearer ${state.token}` }
-        }
-      )
-      .then(
-        response => {
-          const note = response.data;
-          update({
-            notes: [
-              ...state.notes,
-              note
-            ]
-          });
-          navigate('/');
-        }
-      )
-      .finally(
-        () => {
-          setLoading(false);
-        }
-      )
+      addMutation.mutate(noteData as any);
     }
   }
 
@@ -128,7 +105,11 @@ function NewNote(props: NewNoteProps) {
           <Button type="secondary" link to="/">
             Cancel
           </Button>
-          <Button type="primary" onClick={save} loading={loading}>
+          <Button
+            type="primary"
+            onClick={save}
+            loading={editMutation.isLoading || addMutation.isLoading}
+          >
             Save
           </Button>
         </div>
@@ -149,36 +130,19 @@ function NewNote(props: NewNoteProps) {
 }
 
 function EditNote() {
-  const [note, setNote] = useState();
   const navigate = useNavigate();
-  const {state} = useData();
+  const api = useApi();
   const { id } = useParams();
-  const [loading, setLoading] = useState(true);
-  useEffect(
-    () => {
-      axios.get(
-        process.env.REACT_APP_API_URL + `notes/${id}`,
-        {
-          headers: { Authorization: `Bearer ${state.token}` }
-        }
-      )
-      .then(
-        response => {
-          setNote(response.data);
-        }
-      )
-      .catch(
-        () => {
-          navigate('/');
-        }
-      )
-      .finally(
-        () => {
-          setLoading(false);
-        }
-      )
-    }, [id]
-  );
+  const { data, isFetching } = useQuery<NoteType, Error>('noteQuery', async () => {
+    const { data } = await api.get(
+      `notes/${id}`,
+    );
+    return data;
+  }, {
+    onError: () => {
+      navigate('/');
+    }
+  });
 
-  return loading ? <PageLoader /> : <NewNote note={note}/>;
+  return isFetching ? <PageLoader /> : <NewNote note={data}/>;
 }

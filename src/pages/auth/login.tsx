@@ -1,38 +1,34 @@
-import axios from 'axios';
 import { useState } from 'react';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { Button, Link, TextInput } from '../../components';
-import { FormField } from '../../components/inputs/formField';
-import { useUser } from '../../data/authMiddleware';
+import { Button, TextInput, Link, FormField } from '../../components';
+import { useUser, useApi } from "../../data";
 import styles from './auth.module.scss';
 
 export function Login() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const api = useApi(false);
   const { setUserToken } = useUser();
   const [form, setForm] = useState({
     email: '',
     password: '',
   });
 
+  const loginMutation = useMutation(async (loginData) => {
+    return (await api.post('auth/login', loginData)).data;
+  }, {
+    onSuccess: (data) => {
+      setUserToken(data.authToken);
+      navigate('/');
+    },
+  });
+
   function login() {
     if(form.password && form.email) {
-      setLoading(true);
-      axios.post(process.env.REACT_APP_API_URL + 'auth/login', {
+      loginMutation.mutate({
         email: form.email,
         password: form.password
-      })
-      .then(
-        response => {
-          setUserToken(response.data.authToken);
-          navigate('/');
-        }
-      )
-      .finally(
-        () => {
-          setLoading(false);
-        }
-      )
+      } as any);
     }
   }
 
@@ -46,12 +42,12 @@ export function Login() {
           <TextInput value={form.email} onChange={(e) => setForm({...form, email: e.target.value})}/>
         </FormField>
         <FormField label='Password'>
-          <TextInput value={form.password} onChange={(e) => setForm({...form, password: e.target.value})}/>
+          <TextInput value={form.password} type="password" onChange={(e) => setForm({...form, password: e.target.value})}/>
         </FormField>
 
         <Button
           className={styles.button}
-          loading={loading}
+          loading={loginMutation.isLoading}
           type="primary"
           children="Login to your account"
           onClick={login}

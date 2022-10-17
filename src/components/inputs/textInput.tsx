@@ -8,6 +8,7 @@ export function TextInput(props: InputProps<HTMLInputElement>) {
       value={props.value}
       placeholder={props.placeholder}
       onChange={props.onChange}
+      type={props.type}
     />
   )
 }
