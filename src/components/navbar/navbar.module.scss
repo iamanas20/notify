@@ -1,0 +1,26 @@
+@import '../../styles/variables.scss';
+
+.navbarContainer {
+  height: $navbarHeight;
+  .navbar {
+    height: $navbarHeight;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    max-width: 1200px;
+    width: 100%;
+    margin: auto;
+    padding: 0 34px;
+    color: $primary;
+
+    .logout {
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      &:hover {
+        color: $primaryHover;
+      }
+    }
+  }
+}

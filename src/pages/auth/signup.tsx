@@ -5,18 +5,25 @@ import { Button, TextInput, Link, FormField } from '../../components';
 import { useUser, useApi } from "../../data";
 import styles from './auth.module.scss';
 
+type SignupData = {
+  name: string;
+  email: string;
+  password: string;
+  rePassword: string;
+}
+
 export function Signup() {
   const navigate = useNavigate();
   const api = useApi(false);
   const { setUserToken } = useUser();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<SignupData>({
     name: '',
     email: '',
     password: '',
     rePassword: '',
   });
 
-  const signupMutation = useMutation(async (signupData) => {
+  const signupMutation = useMutation<{ authToken: string }, Error, Omit<SignupData, 'rePassword'>>(async (signupData) => {
     return (await api.post('auth/signup', signupData)).data;
   }, {
     onSuccess: (data) => {
@@ -32,7 +39,7 @@ export function Signup() {
           name: form.name,
           email: form.email,
           password: form.password
-        } as any);
+        });
       }
     }
   }

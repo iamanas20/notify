@@ -42,28 +42,3 @@ export function AuthMiddleware(props: AuthMiddlewareProps) {
 
   return isFetching ? <PageLoader /> : props.children;
 }
-
-export function useUser() {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const { update } = useData();
-  const [cookies, setCookie, removeCookie] = useCookies(['token']);
-
-  function logout() {
-    removeCookie("token");
-    update({
-      token: '',
-    });
-    navigate('/auth');
-  }
-
-  function setUserToken(userToken: string) {
-    setCookie("token", userToken, { path: '/' });
-  }
-
-  return {
-    user: queryClient.getQueryData('userQuery'),
-    logout,
-    setUserToken,
-  }
-}

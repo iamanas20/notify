@@ -1,21 +1,29 @@
 import { Fragment, useState } from 'react';
-import { state, AppContext, AppUpdateContext } from './data';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from 'react-router-dom';
-import {
-  Auth,
-  Home,
-  Note
-} from './pages';
 import { Navbar } from './components';
 import { AuthMiddleware } from './data/authMiddleware';
 import { QueryClient, QueryClientProvider } from 'react-query'
 
 import './styles/index.scss';
 import { StateType } from './data/types';
+
+import {
+  state,
+  AppContext,
+  AppUpdateContext,
+  AxiosInterceptor
+} from './data';
+
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from 'react-router-dom';
+
+import {
+  Auth,
+  Home,
+  Note
+} from './pages';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,12 +56,14 @@ function DashboardApp() {
   return (
     <Fragment>
       <Navbar />
-      <AuthMiddleware>
-        <Routes>
-          <Route index element={<Home />} />
-          <Route path='/note/*' element={<Note />} />
-        </Routes>
-      </AuthMiddleware>
+      <AxiosInterceptor>
+        <AuthMiddleware>
+          <Routes>
+            <Route index element={<Home />} />
+            <Route path='/note/*' element={<Note />} />
+          </Routes>
+        </AuthMiddleware>
+      </AxiosInterceptor>
     </Fragment>
   )
 }

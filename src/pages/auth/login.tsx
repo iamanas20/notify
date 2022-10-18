@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
@@ -5,16 +6,21 @@ import { Button, TextInput, Link, FormField } from '../../components';
 import { useUser, useApi } from "../../data";
 import styles from './auth.module.scss';
 
+type LoginData = {
+  email: string;
+  password: string;
+}
+
 export function Login() {
   const navigate = useNavigate();
   const api = useApi(false);
   const { setUserToken } = useUser();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<LoginData>({
     email: '',
     password: '',
   });
 
-  const loginMutation = useMutation(async (loginData) => {
+  const loginMutation = useMutation<{ authToken: string }, Error, LoginData>(async (loginData) => {
     return (await api.post('auth/login', loginData)).data;
   }, {
     onSuccess: (data) => {
@@ -28,7 +34,7 @@ export function Login() {
       loginMutation.mutate({
         email: form.email,
         password: form.password
-      } as any);
+      });
     }
   }
 

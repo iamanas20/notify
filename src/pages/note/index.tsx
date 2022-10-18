@@ -20,13 +20,19 @@ type NewNoteProps = {
   note?: NoteType;
 };
 
+type FormNoteData = {
+  title: string;
+  text: string;
+  color: string;
+}
+
 function NewNote(props: NewNoteProps) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const api = useApi();
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   
-  const [noteData, setNoteData] = useState(props.note || {
+  const [noteData, setNoteData] = useState<NoteType | FormNoteData>(props.note || {
     title: '',
     text: '',
     color: '#F3F7FE',
@@ -41,16 +47,16 @@ function NewNote(props: NewNoteProps) {
     setIsPickerOpen(!isPickerOpen);
   }
 
-  const editMutation = useMutation(async (noteData) => {
-    return await api.post(
+  const editMutation = useMutation<void, Error, FormNoteData>(async (noteData) => {
+    await api.post(
       `notes/${props.note!.id}`,
       noteData,
     )
   }, {
     onSuccess: invalidateNotesList
   });
-  const addMutation = useMutation(async (noteData) => {
-    return await api.post(
+  const addMutation = useMutation<void, Error, FormNoteData>(async (noteData) => {
+    await api.post(
       'notes',
       noteData,
     )
@@ -65,10 +71,10 @@ function NewNote(props: NewNoteProps) {
         title: noteData.title,
         text: noteData.text,
         color: noteData.color,
-      } as any);
+      });
     } else {
       // create
-      addMutation.mutate(noteData as any);
+      addMutation.mutate(noteData);
     }
   }
 

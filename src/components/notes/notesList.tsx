@@ -1,9 +1,10 @@
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
 import { useData, NoteType, useApi } from "../../data";
 import styles from './notes.module.scss';
 import { useQuery } from 'react-query';
 import { PageLoader } from "../page-loader";
+import { NoteItem } from "./noteItem";
+import { EmptyState } from "../empty-state";
 
 export function NotesList() {
   const { state } = useData();
@@ -21,32 +22,23 @@ export function NotesList() {
       <p className={styles.listTitle}>Notes list</p>
       {
         isFetching ? <PageLoader /> :
-        <div className={styles.notesList}>
-        {
-          data!.map(
-            (note) => {
-              return (
-                <Link
-                  key={note.id}
-                  to={"/note/" + note.id}
-                >
-                  <div
-                    className={styles.noteItem}
-                    style={{ background: note.color }}
-                  >
-                    <h4 className={styles.title}>
-                      {note.title}
-                    </h4>
-                    <p className={styles.text}>
-                      {note.text}
-                    </p>
-                  </div>
-                </Link>
+        (
+          data?.length ?
+          (
+            <div className={styles.notesList}>
+            {
+              data!.map(
+                (note) => {
+                  return (
+                    <NoteItem note={note} key={note.id}/>
+                  )
+                }
               )
             }
-          )
-        }
-        </div>
+            </div>
+          ) :
+          <EmptyState text="You don't have any notes yet, create some."/>
+        )
       }
     </Fragment>
   )
