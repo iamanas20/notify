@@ -30,3 +30,13 @@ yarn start
 
 I've used https://vercel.com for the deployment.
 Check it out here: https://notify-gold.vercel.app/
+
+## Screenshots
+
+<img width="1351" alt="image" src="https://user-images.githubusercontent.com/27561160/197284659-efa9b205-a2bb-4504-b5ca-747923122f43.png">
+<img width="1351" alt="image" src="https://user-images.githubusercontent.com/27561160/197284679-37bfe514-d64d-4207-a725-fa9ee53d316a.png">
+<img width="1351" alt="image" src="https://user-images.githubusercontent.com/27561160/197284712-7f3af1e3-ec77-41eb-b961-0699d693f37a.png">
+<img width="1351" alt="image" src="https://user-images.githubusercontent.com/27561160/197284757-4e7d86c6-5c44-4287-b75c-e5402976809b.png">
+<img width="1351" alt="image" src="https://user-images.githubusercontent.com/27561160/197284787-7c90dc8a-e60e-48d9-82e7-7afc5f8e7a03.png">
+
+<img width="1351" alt="image" src="https://user-images.githubusercontent.com/27561160/197284679-37bfe514-d64d-4207-a725-fa9ee53d316a.png">
