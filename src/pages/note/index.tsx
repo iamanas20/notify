@@ -5,6 +5,7 @@ import { ChromePicker } from 'react-color';
 import styles from './note.module.scss';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { NoteType, useApi } from "../../data";
+import { toast } from 'react-hot-toast';
 
 export function Note() {
   return (
@@ -38,8 +39,9 @@ function NewNote(props: NewNoteProps) {
     color: '#F3F7FE',
   });
   
-  function invalidateNotesList() {
+  function invalidateNotesList(type: string) {
     queryClient.invalidateQueries('notesListQuery');
+    toast.success('Note successfully ' + type + '!');
     navigate('/');
   }
 
@@ -53,7 +55,7 @@ function NewNote(props: NewNoteProps) {
       noteData,
     )
   }, {
-    onSuccess: invalidateNotesList
+    onSuccess: () => invalidateNotesList('updated'),
   });
   const addMutation = useMutation<void, Error, FormNoteData>(async (noteData) => {
     await api.post(
@@ -61,7 +63,7 @@ function NewNote(props: NewNoteProps) {
       noteData,
     )
   }, {
-    onSuccess: invalidateNotesList
+    onSuccess: () => invalidateNotesList('created'),
   });
 
   function save() {

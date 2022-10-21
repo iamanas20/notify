@@ -4,6 +4,7 @@ import styles from './notes.module.scss';
 import { useMutation, useQueryClient } from "react-query";
 import { MouseEvent } from "react";
 import { AxiosResponse } from "axios";
+import { toast } from "react-hot-toast";
 
 type NoteItemProps = {
   note: NoteType
@@ -20,6 +21,7 @@ export function NoteItem({ note }: NoteItemProps) {
   }, {
     onSuccess: () => {
       queryClient.invalidateQueries('notesListQuery');
+      toast.success('Note deleted!');
     }
   });
 

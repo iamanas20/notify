@@ -1,8 +1,11 @@
+import { AxiosError } from 'axios';
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useMutation } from 'react-query';
 import { useNavigate } from "react-router-dom";
+import { onError } from '.';
 import { Button, TextInput, Link, FormField } from '../../components';
-import { useUser, useApi } from "../../data";
+import { useUser, useApi, ErrorData } from "../../data";
 import styles from './auth.module.scss';
 
 type SignupData = {
@@ -28,8 +31,10 @@ export function Signup() {
   }, {
     onSuccess: (data) => {
       setUserToken(data.authToken);
+      toast.success('Signed up successfully! Welcome to Notify!');
       navigate('/');
     },
+    onError
   });
 
   function signup() {
@@ -57,7 +62,7 @@ export function Signup() {
           <TextInput value={form.email} onChange={(e) => setForm({...form, email: e.target.value})}/>
         </FormField>
         <FormField label='Password'>
-          <TextInput value={form.password} onChange={(e) => setForm({...form, password: e.target.value})}/>
+          <TextInput value={form.password} type="password" onChange={(e) => setForm({...form, password: e.target.value})}/>
         </FormField>
         <FormField label='Password again'>
           <TextInput value={form.rePassword} type="password" onChange={(e) => setForm({...form, rePassword: e.target.value})}/>

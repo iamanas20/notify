@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { useData, NoteType, useApi } from "../../data";
+import { NoteType, useApi } from "../../data";
 import styles from './notes.module.scss';
 import { useQuery } from 'react-query';
 import { PageLoader } from "../page-loader";
@@ -7,7 +7,6 @@ import { NoteItem } from "./noteItem";
 import { EmptyState } from "../empty-state";
 
 export function NotesList() {
-  const { state } = useData();
   const api = useApi();
   const { data, isFetching } = useQuery<NoteType[], Error>('notesListQuery', async () => {
     const { data } = await api

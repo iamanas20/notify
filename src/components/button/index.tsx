@@ -32,14 +32,14 @@ export function Button(props: ButtonProps) {
     >
       {
         props.loading ?
-        <Loading /> :
+        <ButtonLoading /> :
         props.children
       }
     </button>
   )
 }
 
-function Loading() {
+function ButtonLoading() {
   return (
     <div className={styles.loading}><div></div><div></div><div></div><div></div></div>
   )

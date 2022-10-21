@@ -3,7 +3,7 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { useData } from "./context";
 import { PageLoader } from "../components";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { useApi } from "./useApi";
 
 type AuthMiddlewareProps = {

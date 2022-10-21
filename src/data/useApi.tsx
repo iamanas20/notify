@@ -1,6 +1,7 @@
-import axios, { Axios, AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
+import { toast } from "react-hot-toast";
 import { useUser } from "./useUser";
 
 type useApiReturn = {
@@ -55,6 +56,10 @@ type AxiosInterceptorProps = {
   children: JSX.Element;
 }
 
+export type ErrorData = {
+  code: string; message: string
+}
+
 export const AxiosInterceptor = ({ children }: AxiosInterceptorProps) => {
   const { logout } = useUser();
   useEffect(
@@ -66,6 +71,7 @@ export const AxiosInterceptor = ({ children }: AxiosInterceptorProps) => {
         if (error.response!.status === 401) {
           logout();
         }
+        toast.error(`Error: ${error.response?.status} — ${(error.response?.data as ErrorData).message}`);
         return Promise.reject(error);
       }
 

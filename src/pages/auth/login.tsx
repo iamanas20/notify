@@ -1,7 +1,8 @@
-import { AxiosResponse } from 'axios';
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { onError } from '.';
 import { Button, TextInput, Link, FormField } from '../../components';
 import { useUser, useApi } from "../../data";
 import styles from './auth.module.scss';
@@ -27,6 +28,7 @@ export function Login() {
       setUserToken(data.authToken);
       navigate('/');
     },
+    onError
   });
 
   function login() {

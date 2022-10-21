@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 
 import './styles/index.scss';
 import { StateType } from './data/types';
+import { Toaster } from 'react-hot-toast';
 
 import {
   state,
@@ -35,7 +36,6 @@ const queryClient = new QueryClient({
 
 export default function App() {
   const [appState, setAppState] = useState<StateType>(state);
-  console.log(process.env.REACT_APP_API_URL);
   return (
     <QueryClientProvider client={queryClient}>
       <AppContext.Provider value={appState}>
@@ -48,6 +48,7 @@ export default function App() {
           </BrowserRouter>
         </AppUpdateContext.Provider>
       </AppContext.Provider>
+      <Toaster position="bottom-center"/>
     </QueryClientProvider>
   )
 }
