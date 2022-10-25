@@ -19,6 +19,12 @@ li,
 
 body, html {
   scroll-behavior: smooth;
+  overflow: hidden;
+}
+
+#root {
+  height: 100vh;
+  overflow: auto;
 }
 
 a {
@@ -58,4 +64,12 @@ a {
   font-family: 'InterTight';
   src: url('../assets/inter-tight-font/InterTight-Light.ttf');
   font-weight: 300;
+}
+
+#modals {
+  z-index: 9999;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }

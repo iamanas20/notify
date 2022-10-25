@@ -7,3 +7,4 @@ export * from './navbar';
 export * from './page-loader';
 export * from './logo';
 export * from './empty-state';
+export * from './modal';
