@@ -50,6 +50,17 @@
       -webkit-box-orient: vertical;
     }
 
+    &.white {
+      color: $white;
+      .delete {
+        &:hover {
+          color: $secondaryHover;
+        }
+      }
+    }
+    &.black {
+      color: $primary;
+    }
     &:hover {
       .delete {
         display: block;

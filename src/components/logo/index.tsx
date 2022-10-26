@@ -4,7 +4,7 @@ import styles from './logo.module.scss';
 export function Logo() {
   return (
     <Link to="/" className={styles.logo}>
-      Notify
+      <pre>📝  Notify</pre>
     </Link>
   )
 }

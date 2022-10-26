@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import './styles/index.scss';
 import { StateType } from './data/types';
 import { Toaster } from 'react-hot-toast';
+import { Helmet } from "react-helmet";
 
 import {
   state,
@@ -38,6 +39,9 @@ export default function App() {
   const [appState, setAppState] = useState<StateType>(state);
   return (
     <QueryClientProvider client={queryClient}>
+      <Helmet>
+      <link rel="icon" href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>`.trim()} />
+      </Helmet>
       <AppContext.Provider value={appState}>
         <AppUpdateContext.Provider value={setAppState}>
           <BrowserRouter>
