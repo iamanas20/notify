@@ -5,39 +5,35 @@ import { toast } from "react-hot-toast";
 import { useUser } from "./useUser";
 
 type useApiReturn = {
-  get: (endpoint: string) => Promise<AxiosResponse<any, any>>;
-  post: (endpoint: string, data: any) => Promise<AxiosResponse<any, any>>;
-  delete: (endpoint: string, data: any) => Promise<AxiosResponse<any, any>>;
+  get: (endpoint: string) => Promise<AxiosResponse<any>>;
+  post: (endpoint: string, data: any) => Promise<AxiosResponse<any>>;
+  delete: (endpoint: string) => Promise<AxiosResponse<any>>;
 }
 
 export function useApi(authed = true): useApiReturn {
   const [cookies] = useCookies(['token']);
 
-  function get(endpoint: string): Promise<AxiosResponse<any, any>> {
+  const authHeaders = authed ? { headers: { Authorization: `Bearer ${cookies["token"]}` } } : {}
+
+  function get(endpoint: string): Promise<AxiosResponse<any>> {
     return axiosInstance.get(
       endpoint,
-      authed ? {
-        headers: { Authorization: `Bearer ${cookies["token"]}` }
-      } : {}
+      authHeaders
     )
   }
 
-  function post(endpoint: string, data: any): Promise<AxiosResponse<any, any>> {
+  function post(endpoint: string, data: any): Promise<AxiosResponse<any>> {
     return axiosInstance.post(
       endpoint,
       data,
-      authed ? {
-        headers: { Authorization: `Bearer ${cookies["token"]}` }
-      } : {}
+      authHeaders
     )
   }
 
-  function deleteFunction(endpoint: string, data: any): Promise<AxiosResponse<any, any>> {
+  function deleteFunction(endpoint: string): Promise<AxiosResponse<any>> {
     return axiosInstance.delete(
       endpoint,
-      authed ? {
-        headers: { Authorization: `Bearer ${cookies["token"]}` }
-      } : {}
+      authHeaders
     )
   }
 
@@ -64,7 +60,7 @@ export const AxiosInterceptor = ({ children }: AxiosInterceptorProps) => {
   const { logout } = useUser();
   useEffect(
     () => {
-      const resInterceptor = (response: AxiosResponse<any, any>) => {
+      const resInterceptor = (response: AxiosResponse<any>) => {
         return response;
       }
       const errInterceptor = (error: AxiosError) => {

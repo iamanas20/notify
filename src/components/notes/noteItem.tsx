@@ -25,10 +25,7 @@ export function NoteItem({ note }: NoteItemProps) {
   const api = useApi();
   const [isOpen, open, close] = Modal.useModalState();
   const deleteMutation = useMutation<AxiosResponse, Error, number>(async (noteId) => {
-    return await api.delete(
-      `notes/${noteId}`,
-      noteId,
-    )
+    return await api.delete(`notes/${noteId}`)
   }, {
     onSuccess: () => {
       queryClient.invalidateQueries('notesListQuery');
