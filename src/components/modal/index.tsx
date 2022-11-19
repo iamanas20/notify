@@ -28,7 +28,7 @@ function ModalRenderer(props: ModalProps) {
       <div className={styles.modal}>
         <div className={styles.title}>
           <div className={styles.titleText}>{props.title}</div>
-          <div className={styles.xIcon} onClick={props.close}>
+          <div className={styles.close} onClick={props.close}>
             Close
           </div>
         </div>
@@ -45,10 +45,12 @@ function ModalRenderer(props: ModalProps) {
 
 Modal.useModalState = function(): [boolean, () => void, () => void] {
   const [state, setState] = useState(false);
+  const open = () => setState(true);
+  const close = () => setState(false);
 
   return [
     state,
-    () => setState(true),
-    () => setState(false),
+    open,
+    close,
   ]
 }

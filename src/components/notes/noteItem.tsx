@@ -64,7 +64,7 @@ export function NoteItem({ note }: NoteItemProps) {
         isOpen && (
           <Modal
             close={close}
-            title="Delete Node"
+            title="Delete Note"
             footer={
               <Fragment>
                 <Button type="secondary" onClick={close}>

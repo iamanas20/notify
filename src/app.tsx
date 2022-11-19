@@ -46,8 +46,10 @@ export default function App() {
         <AppUpdateContext.Provider value={setAppState}>
           <BrowserRouter>
             <Routes>
+              {/* These are the Auth pages */}
               <Route path='/auth/*' element={<Auth />} />
-              <Route path='/*' element={<DashboardApp />} />
+
+              <Route path='/*' element={<DashboardApp />} /> 
             </Routes>
           </BrowserRouter>
         </AppUpdateContext.Provider>
@@ -62,6 +64,7 @@ function DashboardApp() {
     <Fragment>
       <Navbar />
       <AxiosInterceptor>
+        {/* The AuthMiddleware guard */}
         <AuthMiddleware>
           <Routes>
             <Route index element={<Home />} />
